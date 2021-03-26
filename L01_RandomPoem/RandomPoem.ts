@@ -24,6 +24,7 @@ namespace Poem {
         if (poem) {
             poem.innerText += sentence;
         }
+        if (i == 5)
         console.log(poem);
     }}
 

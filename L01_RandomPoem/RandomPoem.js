@@ -21,7 +21,8 @@ var Poem;
             if (poem) {
                 poem.innerText += sentence;
             }
-            console.log(poem);
+            if (i == 5)
+                console.log(poem);
         }
     }
     function getVerse(_subject, _verb, _object) {
