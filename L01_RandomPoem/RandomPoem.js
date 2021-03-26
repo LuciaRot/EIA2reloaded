@@ -8,9 +8,9 @@ var Poem;
         document.querySelector("#btn1")?.addEventListener("mousedown", newPoem);
         createPoem();
     }
-    let subjects = ["Harry", "Hermione", "Ron", "Hagrid", "Snape", "Dumbledore"];
-    let verbs = ["braut", "liebt", "studiert", "hasst", "zaubert", "zerstört"];
-    let objects = ["Zaubertränke", "den Grimm", "Lupin", "Hogwarts", "die Karte des Rumtreibers", "Dementoren"];
+    let subjects = ["Alex", "Mara", "Alida", "Luci", "Karen", "Kenneth"];
+    let verbs = ["braut", "liebt", "mag am liebsten", "hasst", "trinkt", "ext"];
+    let objects = ["Bier", "Whiskey", "Vodka", "Sekt", "Gin", "Radler"];
     // console.log(subjects);
     // console.log(verbs);
     // console.log(objects);

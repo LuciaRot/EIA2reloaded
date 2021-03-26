@@ -9,9 +9,9 @@ namespace Poem {
         createPoem();
     }
 
-    let subjects: string[] = ["Harry", "Hermione", "Ron", "Hagrid", "Snape", "Dumbledore"];
-    let verbs: string[] = ["braut", "liebt", "studiert", "hasst", "zaubert", "zerstört"];
-    let objects: string[] = ["Zaubertränke", "den Grimm", "Lupin", "Hogwarts", "die Karte des Rumtreibers", "Dementoren"];
+    let subjects: string[] = ["Alex", "Mara", "Alida", "Luci", "Karen", "Kenneth"];
+    let verbs: string[] = ["braut", "liebt", "mag am liebsten", "hasst", "trinkt", "ext"];
+    let objects: string[] = ["Bier", "Whiskey", "Vodka", "Sekt", "Gin", "Radler"];
     // console.log(subjects);
     // console.log(verbs);
     // console.log(objects);
