@@ -11,9 +11,6 @@ var Poem;
     let subjects = ["Alex", "Mara", "Alida", "Luci", "Karen", "Kenneth"];
     let verbs = ["braut", "liebt", "mag am liebsten", "hasst", "trinkt", "ext"];
     let objects = ["Bier", "Whiskey", "Vodka", "Sekt", "Gin", "Radler"];
-    // console.log(subjects);
-    // console.log(verbs);
-    // console.log(objects);
     function createPoem() {
         for (let i = 5; i > 0; i--) {
             let sentence = getVerse(subjects, verbs, objects);
@@ -21,8 +18,6 @@ var Poem;
             if (poem) {
                 poem.innerText += sentence;
             }
-            if (i == 5)
-                console.log(poem);
         }
     }
     function getVerse(_subject, _verb, _object) {
@@ -30,6 +25,9 @@ var Poem;
         let randomVerb = Math.floor(Math.random() * verbs.length);
         let randomObject = Math.floor(Math.random() * objects.length);
         let verse = _subject.splice(randomSubject, 1)[0] + " " + _verb.splice(randomVerb, 1)[0] + " " + _object.splice(randomObject, 1)[0] + "\n";
+        if (subjects.length >= 1) {
+            console.log(verse);
+        }
         return verse;
     }
     function newPoem() {
