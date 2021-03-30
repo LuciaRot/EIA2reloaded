@@ -25,9 +25,7 @@ var Poem;
         let randomVerb = Math.floor(Math.random() * verbs.length);
         let randomObject = Math.floor(Math.random() * objects.length);
         let verse = _subject.splice(randomSubject, 1)[0] + " " + _verb.splice(randomVerb, 1)[0] + " " + _object.splice(randomObject, 1)[0] + "\n";
-        if (subjects.length >= 1) {
-            console.log(verse);
-        }
+        console.log(verse);
         return verse;
     }
     function newPoem() {
