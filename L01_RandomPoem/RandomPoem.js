@@ -21,9 +21,9 @@ var Poem;
         }
     }
     function getVerse(_subject, _verb, _object) {
-        let randomSubject = Math.floor(Math.random() * subjects.length);
-        let randomVerb = Math.floor(Math.random() * verbs.length);
-        let randomObject = Math.floor(Math.random() * objects.length);
+        let randomSubject = Math.floor(Math.random() * _subject.length);
+        let randomVerb = Math.floor(Math.random() * _verb.length);
+        let randomObject = Math.floor(Math.random() * _object.length);
         let verse = _subject.splice(randomSubject, 1)[0] + " " + _verb.splice(randomVerb, 1)[0] + " " + _object.splice(randomObject, 1)[0] + "\n";
         console.log(verse);
         return verse;
