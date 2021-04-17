@@ -20,8 +20,11 @@ div {
     width: 500px;
     height: 500px;
     background-color: rgb(189, 178, 79, 0.5);
+    border-radius: 15px;
     
 }
+
+
 
 body {
     background-image: url("sand.jpg");
@@ -31,5 +34,11 @@ h1 {
     color: white;
     font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
     font-size: 50px;
-    font-weight: 700;
+}
+
+button {
+    position: absolute;
+    margin: 10px;
+    width: 200px;
+    height: 80px;
 }
