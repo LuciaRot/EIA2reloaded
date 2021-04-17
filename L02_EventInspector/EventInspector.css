@@ -1,18 +1,35 @@
 span {
     position: fixed;
-    width: 150px;
+    width: 200px;
     height: auto;
     border-style: solid;
-    border-color: cadetblue;
+    border-color: rgb(255, 255, 255);
     border-radius: 15px;
+    color: rgb(0, 0, 0);
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    background-color: rgb(245, 245, 245, 0.75);
+    font-weight: bolder;
+    
 }
 
 div {
     border-style: solid;
-    border-color: cornflowerblue;
+    border-color: rgba(190, 166, 31);
     margin: 50px;
     display: inline-block;
     width: 500px;
     height: 500px;
+    background-color: rgb(189, 178, 79, 0.5);
     
+}
+
+body {
+    background-image: url("sand.jpg");
+}
+
+h1 {
+    color: white;
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    font-size: 50px;
+    font-weight: 700;
 }
