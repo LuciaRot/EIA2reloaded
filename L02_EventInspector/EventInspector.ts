@@ -1,10 +1,13 @@
 namespace EventInspector {
 
     window.addEventListener("load", handleLoad);
+    
+    let button: HTMLElement;
 
     function handleLoad(): void {
         let body: HTMLElement = <HTMLElement> document.querySelector("body");
         let divs: NodeListOf<HTMLDivElement> = document.querySelectorAll("div");
+        button = <HTMLElement> document.querySelector("button");
 
         document.addEventListener("mousemove", setInfoBox);
         document.addEventListener("click", logInfo);
@@ -16,7 +19,8 @@ namespace EventInspector {
         for (let i: number = 0; i < divs.length; i++) {
             divs[i].addEventListener("click", logInfo);
             divs[i].addEventListener("keyup", logInfo);
-        }
+        } 
+        button.addEventListener("click", cEventTrigger);
     }
 
     function setInfoBox(_event: MouseEvent): void {
@@ -24,7 +28,7 @@ namespace EventInspector {
         let x: number = _event.clientX;
         let y: number = _event.clientY;
         let target: EventTarget = <EventTarget> _event.target;
-        span.innerText = "x-coordinate:" + x + "y-coordinate:" + y + "target:" + target;
+        span.innerText = "x-coordinate:" + x + "\n" + "y-coordinate:" + y + "\n" + "target:" + target;
         span.style.left = x + 20 + "px";
         span.style.top = y + 20 + "px";
     }
@@ -37,10 +41,16 @@ namespace EventInspector {
     }
 
 
+    function cEventTrigger (_event: Event): void {
+        document.addEventListener("starting", doSomething);
+        let cEvent: CustomEvent = new CustomEvent ("starting", {bubbles: true});
+        button.dispatchEvent(cEvent);
+       
+    }
 
-
-
-
+    function doSomething(_event: Event): void {
+        console.log(_event);
+    }
 
 
 
