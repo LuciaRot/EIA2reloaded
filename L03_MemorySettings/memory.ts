@@ -8,10 +8,10 @@ namespace memory {
     let clicked: boolean = false;
     let firstValue: number;
     let secondValue: number;
-    let targetOne: HTMLDivElement;
-    let targetTwo: HTMLDivElement;
-    let time: number = 0;
-    let body: HTMLElement = <HTMLElement>document.querySelector("body");
+    let targetOne: HTMLElement;
+    let targetTwo: HTMLElement;
+    //let time: number = 0;
+    //let body: HTMLElement = <HTMLElement>document.querySelector("body");
 
 
     function handleLoad(): void {
@@ -53,14 +53,39 @@ namespace memory {
 
             //console.log(card.classList)
             tableTop.appendChild(card);
-            card.innerText = pickedCard.toString();
-           // card.addEventListener("pointerdown", turnCard);
+            //card.innerText = pickedCard.toString();
+            card.addEventListener("pointerdown", turnCard);
         }
     }
 
-    function turnCard(_event: PointerEvent) {
-        let target: EventTarget = <EventTarget> _event.target;
-        console.log(target);
-        //let value: number = target.id; 
+    function turnCard(_event: PointerEvent): void {
+        let target: HTMLElement = <HTMLElement>_event.target;
+        let value: number = Number(target.id);
+        console.log(value);
+        target.innerText = value.toString();
+
+        if (clicked == false) {
+            firstValue = value;
+            targetOne = target;
+            clicked = true;
+        }
+        else if (clicked == true) {
+            secondValue = value;
+            targetTwo = target;
+            clicked = false;
+            setTimeout(checkCards, 2000);
+        }
+    }
+
+    function checkCards(): void {
+        if (firstValue == secondValue) {
+            targetOne.classList.add("rightCard");
+            targetOne.classList.remove("visible");
+            targetTwo.classList.add("rightCard");
+            targetTwo.classList.remove("visible");
+        } else {
+            targetOne.innerText = "";
+            targetTwo.innerText = "";
+        }
     }
 }

@@ -10,8 +10,8 @@ var memory;
     let secondValue;
     let targetOne;
     let targetTwo;
-    let time = 0;
-    let body = document.querySelector("body");
+    //let time: number = 0;
+    //let body: HTMLElement = <HTMLElement>document.querySelector("body");
     function handleLoad() {
         let button = document.querySelector("button");
         button.addEventListener("pointerdown", startGame);
@@ -42,14 +42,38 @@ var memory;
             card.id = pickedCard.toString();
             //console.log(card.classList)
             tableTop.appendChild(card);
-            card.innerText = pickedCard.toString();
-            // card.addEventListener("pointerdown", turnCard);
+            //card.innerText = pickedCard.toString();
+            card.addEventListener("pointerdown", turnCard);
         }
     }
     function turnCard(_event) {
         let target = _event.target;
-        console.log(target);
-        //let value: number = target.id; 
+        let value = Number(target.id);
+        console.log(value);
+        target.innerText = value.toString();
+        if (clicked == false) {
+            firstValue = value;
+            targetOne = target;
+            clicked = true;
+        }
+        else if (clicked == true) {
+            secondValue = value;
+            targetTwo = target;
+            clicked = false;
+            setTimeout(checkCards, 2000);
+        }
+    }
+    function checkCards() {
+        if (firstValue == secondValue) {
+            targetOne.classList.add("rightCard");
+            targetOne.classList.remove("visible");
+            targetTwo.classList.add("rightCard");
+            targetTwo.classList.remove("visible");
+        }
+        else {
+            targetOne.innerText = "";
+            targetTwo.innerText = "";
+        }
     }
 })(memory || (memory = {}));
 //# sourceMappingURL=memory.js.map

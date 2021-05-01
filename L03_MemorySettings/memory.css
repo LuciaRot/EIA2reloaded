@@ -24,16 +24,19 @@ h1 {
     display: none;
 }
 
-div {
+/* div {
     background-color: brown;
-    width:fit-content;
-    height: fit-content;
+    width:1000px;
+    height: 800px;
     padding: 20px;
-}
+} */
 
 .test {
     background-color: cornflowerblue;
     margin: auto;
+    width:1000px;
+    height: 800px;
+    padding: 20px;
 }
 
 .visible {
@@ -52,7 +55,7 @@ div {
     text-align: center;
 }
 
-.invisible {
+/* .invisible {
     background-color: yellowgreen;
     width: 50px;
     height: 50px;
@@ -60,5 +63,14 @@ div {
     display: inline-block;
     border-style: solid;
     border-color: black;
+    border-radius: 15px;
+} */
+
+.rightCard {
+    visibility: hidden;
+    display: inline-block;
+    width: 50px;
+    height: 50px;
+    margin: 10px;
     border-radius: 15px;
 }
