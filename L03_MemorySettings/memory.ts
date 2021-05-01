@@ -51,16 +51,16 @@ namespace memory {
             card.classList.add("visible");
             card.id = pickedCard.toString();
 
-            //console.log(card.classList);
+            //console.log(card.classList)
             tableTop.appendChild(card);
             card.innerText = pickedCard.toString();
-            card.addEventListener("pointerdown", turnCard);
+           // card.addEventListener("pointerdown", turnCard);
         }
     }
 
     function turnCard(_event: PointerEvent) {
         let target: EventTarget = <EventTarget> _event.target;
         console.log(target);
-        let value:  = ; 
+        //let value: number = target.id; 
     }
 }

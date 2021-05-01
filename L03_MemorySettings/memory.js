@@ -40,16 +40,16 @@ var memory;
             let card = document.createElement("div");
             card.classList.add("visible");
             card.id = pickedCard.toString();
-            //console.log(card.classList);
+            //console.log(card.classList)
             tableTop.appendChild(card);
             card.innerText = pickedCard.toString();
-            card.addEventListener("pointerdown", turnCard);
+            // card.addEventListener("pointerdown", turnCard);
         }
     }
     function turnCard(_event) {
         let target = _event.target;
         console.log(target);
-        let value = ;
+        //let value: number = target.id; 
     }
 })(memory || (memory = {}));
 //# sourceMappingURL=memory.js.map
