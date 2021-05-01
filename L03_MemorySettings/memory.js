@@ -4,12 +4,15 @@ var memory;
     window.addEventListener("load", handleLoad);
     let cards = [];
     let tableTop;
-    let amount = 5;
+    let amount;
     let clicked = false;
     let firstValue;
     let secondValue;
     let targetOne;
     let targetTwo;
+    let formData;
+    let bColor;
+    //let cardAmount: FormDataEntryValue | null;
     //let time: number = 0;
     //let body: HTMLElement = <HTMLElement>document.querySelector("body");
     function handleLoad() {
@@ -24,6 +27,16 @@ var memory;
         tableTop = document.createElement("div");
         document.body.appendChild(tableTop);
         tableTop.classList.add("test");
+        formData = new FormData(document.forms[0]);
+        let cardAmount = formData.get("stepper");
+        if (cardAmount) {
+            amount = Number(cardAmount);
+        }
+        else {
+            amount = 5;
+        }
+        console.log(amount);
+        bColor = formData.get("bColor");
         createCards();
     }
     function createCards() {
@@ -35,11 +48,14 @@ var memory;
         for (let a = cards.length; a > 0; a--) {
             let randomCard = Math.floor(Math.random() * cards.length);
             let pickedCard = cards.splice(randomCard, 1);
-            console.log(pickedCard[0]);
+            //console.log(pickedCard[0]);
             tableTop = document.querySelector("div");
             let card = document.createElement("div");
             card.classList.add("visible");
             card.id = pickedCard.toString();
+            if (bColor) {
+                card.style.backgroundColor = bColor?.toString();
+            }
             //console.log(card.classList)
             tableTop.appendChild(card);
             //card.innerText = pickedCard.toString();
@@ -49,7 +65,7 @@ var memory;
     function turnCard(_event) {
         let target = _event.target;
         let value = Number(target.id);
-        console.log(value);
+        //console.log(value);
         target.innerText = value.toString();
         if (clicked == false) {
             firstValue = value;
