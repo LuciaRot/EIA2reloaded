@@ -5,7 +5,7 @@ namespace GenerativeKunst {
     let canvas: HTMLCanvasElement;
     let crc2: CanvasRenderingContext2D;
     let colors: string[] = ["#000000", "red", "blue", "purple", "orange"];
-    let amount: number = Math.floor(Math.random() * 10);
+    let amount: number = Math.floor(Math.random() * 10) + 5;
 
     function handleLoad(): void {
         document.querySelector(".btn")?.addEventListener("mousedown", reloadPage);

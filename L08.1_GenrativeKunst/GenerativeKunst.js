@@ -5,7 +5,7 @@ var GenerativeKunst;
     let canvas;
     let crc2;
     let colors = ["#000000", "red", "blue", "purple", "orange"];
-    let amount = Math.floor(Math.random() * 10);
+    let amount = Math.floor(Math.random() * 10) + 5;
     function handleLoad() {
         document.querySelector(".btn")?.addEventListener("mousedown", reloadPage);
         canvas = document.querySelector("canvas");
