@@ -21,18 +21,25 @@ namespace GenerativeKunst {
         for (let i: number = 0; i < amount; i++) {
             let x: number = Math.floor(Math.random() * 100);
             let y: number = Math.floor(Math.random() * 100);
-            
+
             crc2.beginPath();
             crc2.moveTo(0, 0);
             crc2.lineTo(x, y);
             crc2.moveTo(x, y);
             crc2.lineTo(crc2.canvas.width, crc2.canvas.height);
-            crc2.closePath();
             crc2.strokeStyle = colors[Math.floor(Math.random() * colors.length)];
             crc2.stroke();
+            crc2.closePath();
+        }
 
-
-            
+        for (let i: number = 0; i < 15; i++) {
+            let x: number = Math.floor(Math.random() * 200);
+            let y: number = Math.floor(Math.random() * 200);
+            crc2.beginPath();
+            crc2.arc(x, y, 20, 0, 2 * Math.PI);
+            crc2.strokeStyle = colors[Math.floor(Math.random() * colors.length)];
+            crc2.stroke();
+            crc2.closePath();
         }
     }
 

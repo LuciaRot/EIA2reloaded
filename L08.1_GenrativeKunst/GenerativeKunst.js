@@ -23,9 +23,18 @@ var GenerativeKunst;
             crc2.lineTo(x, y);
             crc2.moveTo(x, y);
             crc2.lineTo(crc2.canvas.width, crc2.canvas.height);
-            crc2.closePath();
             crc2.strokeStyle = colors[Math.floor(Math.random() * colors.length)];
             crc2.stroke();
+            crc2.closePath();
+        }
+        for (let i = 0; i < 15; i++) {
+            let x = Math.floor(Math.random() * 200);
+            let y = Math.floor(Math.random() * 200);
+            crc2.beginPath();
+            crc2.arc(x, y, 20, 0, 2 * Math.PI);
+            crc2.strokeStyle = colors[Math.floor(Math.random() * colors.length)];
+            crc2.stroke();
+            crc2.closePath();
         }
     }
     function reloadPage() {
