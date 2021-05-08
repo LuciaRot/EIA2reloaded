@@ -6,11 +6,15 @@ namespace GenerativeKunst {
     let crc2: CanvasRenderingContext2D;
     let colors: string[] = ["#000000", "red", "blue", "purple", "orange"];
     let amount: number = Math.floor(Math.random() * 10) + 5;
+    let scale: number = window.devicePixelRatio;
+
 
     function handleLoad(): void {
         document.querySelector(".btn")?.addEventListener("mousedown", reloadPage);
         canvas = <HTMLCanvasElement>document.querySelector("canvas");
         crc2 = <CanvasRenderingContext2D>canvas.getContext("2d");
+        canvas.width = 600 * scale;
+        canvas.height = 600 * scale;
         canvas.style.width = 600 + "px";
         canvas.style.height = 600 + "px";
         createImage();
@@ -19,7 +23,7 @@ namespace GenerativeKunst {
 
     function createImage(): void {
         for (let i: number = 0; i < amount; i++) {
-            let x: number = Math.floor(Math.random() * 100);
+            let x: number = Math.floor(Math.random() * 150);
             let y: number = Math.floor(Math.random() * 100);
 
             crc2.beginPath();

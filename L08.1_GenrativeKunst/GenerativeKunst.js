@@ -6,17 +6,20 @@ var GenerativeKunst;
     let crc2;
     let colors = ["#000000", "red", "blue", "purple", "orange"];
     let amount = Math.floor(Math.random() * 10) + 5;
+    let scale = window.devicePixelRatio;
     function handleLoad() {
         document.querySelector(".btn")?.addEventListener("mousedown", reloadPage);
         canvas = document.querySelector("canvas");
         crc2 = canvas.getContext("2d");
+        canvas.width = 600 * scale;
+        canvas.height = 600 * scale;
         canvas.style.width = 600 + "px";
         canvas.style.height = 600 + "px";
         createImage();
     }
     function createImage() {
         for (let i = 0; i < amount; i++) {
-            let x = Math.floor(Math.random() * 100);
+            let x = Math.floor(Math.random() * 150);
             let y = Math.floor(Math.random() * 100);
             crc2.beginPath();
             crc2.moveTo(0, 0);
