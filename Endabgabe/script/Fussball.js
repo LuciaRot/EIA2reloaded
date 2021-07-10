@@ -19,16 +19,19 @@ var football;
         createField();
         placePlayersTeamOne();
         placePlayersTeamTwo();
-        ball = new football.Ball(500 * football.scale, 350 * football.scale);
+        let startPos = new football.Vector(500 * football.scale, 350 * football.scale);
+        ball = new football.Ball(startPos);
         ball.draw();
     }
     function handleClick(_event) {
+        console.log("clicked");
         let rectangle = football.canvas.getBoundingClientRect();
-        console.log(rectangle);
         football.clickX = _event.clientX - rectangle.left;
         football.clickY = _event.clientY - rectangle.top;
-        console.log(football.clickX, football.clickY);
-        ball.move(football.clickX, football.clickY);
+        setInterval(moveBall, 20);
+    }
+    function moveBall() {
+        ball.move(1 / 50);
         ball.draw();
     }
     function placePlayersTeamOne() {

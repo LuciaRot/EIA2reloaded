@@ -19,8 +19,9 @@ namespace football {
     let ball: Ball;
     
 
+
     function handleLoad(): void {
-        
+
         canvas = <HTMLCanvasElement>document.querySelector("canvas");
         crc2 = <CanvasRenderingContext2D>canvas.getContext("2d");
         canvas.width = 1000 * scale;
@@ -29,19 +30,23 @@ namespace football {
         createField();
         placePlayersTeamOne();
         placePlayersTeamTwo();
-        ball = new Ball(500 * scale, 350 * scale);
+        let startPos: Vector = new Vector (500 * scale, 350 * scale);
+        ball = new Ball(startPos);
         ball.draw();
 
     }
 
     function handleClick(_event: MouseEvent): void {
-
-        let rectangle = canvas.getBoundingClientRect();
-        console.log(rectangle);
+        console.log("clicked");
+        let rectangle: DOMRect = canvas.getBoundingClientRect();
         clickX = _event.clientX - rectangle.left;
         clickY = _event.clientY - rectangle.top;
-        console.log(clickX , clickY);
-        ball.move(clickX, clickY);
+        setInterval(moveBall, 20);
+        
+    }
+
+    function moveBall(): void {
+        ball.move(1 / 50);
         ball.draw();
     }
 

@@ -1,22 +1,21 @@
 namespace football {
 
         export class Ball {
-                positionX: number;
-                positionY: number;
-                velocityX: number;
-                velocityY: number;
+                position: Vector;
+                direction: Vector;
 
-                constructor(_positionX: number, _positionY: number) {
+
+                constructor(_position: Vector) {
                         console.log("hello");
-                        this.positionX = _positionX;
-                        this.positionY = _positionY;
+                        /* this.velocity = new Vector(Math.floor(Math.random() * 100), Math.floor(Math.random() * 200)); */
+                        this.position = _position;
                         
                 }
 
                 draw(): void {
                         crc2.save();
                         crc2.beginPath();
-                        crc2.arc(this.positionX, this.positionY, 7, 0, 2 * Math.PI);
+                        crc2.arc(this.position.x, this.position.y, 7, 0, 2 * Math.PI);
                         crc2.strokeStyle = "black";
                         crc2.fillStyle = "white";
                         crc2.lineWidth = 2;
@@ -26,9 +25,11 @@ namespace football {
                         crc2.restore();
                 }
 
-                move(_positionX: number, _positionY: number): void {
-                        this.positionX = _positionX;
-                        this.positionY = _positionY;
+                move(_timeslice: number): void {
+                        this.direction = new Vector(clickX - this.position.x, clickY - this.position.y);
+                        let offset: Vector = new Vector(this.direction.x, this.direction.y);
+                        offset.scale(_timeslice);
+                        this.position.add(offset);
                 }
 
         }
