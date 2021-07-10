@@ -1,9 +1,9 @@
 namespace football {
 
     window.addEventListener("load", handleLoad);
-    let canvas: HTMLCanvasElement;
-    let crc2: CanvasRenderingContext2D;
-    let scale: number = window.devicePixelRatio;
+    export let canvas: HTMLCanvasElement;
+    export let crc2: CanvasRenderingContext2D;
+    export let scale: number = window.devicePixelRatio;
 
     //Team Eins
     let x: number[] = [10, 150, 150, 150, 150, 425, 425, 425, 725, 750, 725];
@@ -13,16 +13,36 @@ namespace football {
     let a: number[] = [990, 850, 850, 850, 850, 575, 575, 575, 275, 250, 275];
     let b: number[] = [350, 575, 425, 275, 125, 525, 350, 175, 575, 350, 125];
 
-    function handleLoad(): void {
+    export let clickX: number;
+    export let clickY: number;
 
+    let ball: Ball;
+    
+
+    function handleLoad(): void {
+        
         canvas = <HTMLCanvasElement>document.querySelector("canvas");
         crc2 = <CanvasRenderingContext2D>canvas.getContext("2d");
-        //field.style.backgroundColor = "red";
         canvas.width = 1000 * scale;
         canvas.height = 700 * scale;
+        canvas.addEventListener("click", handleClick);
         createField();
         placePlayersTeamOne();
         placePlayersTeamTwo();
+        ball = new Ball(500 * scale, 350 * scale);
+        ball.draw();
+
+    }
+
+    function handleClick(_event: MouseEvent): void {
+
+        let rectangle = canvas.getBoundingClientRect();
+        console.log(rectangle);
+        clickX = _event.clientX - rectangle.left;
+        clickY = _event.clientY - rectangle.top;
+        console.log(clickX , clickY);
+        ball.move(clickX, clickY);
+        ball.draw();
     }
 
     function placePlayersTeamOne(): void {
@@ -50,7 +70,6 @@ namespace football {
             crc2.stroke();
             crc2.closePath();
         }
-
     }
 
     function createField(): void {
