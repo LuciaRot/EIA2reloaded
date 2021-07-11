@@ -9,52 +9,66 @@ var football;
     //Team Zwei
     let a = [990, 850, 850, 850, 850, 575, 575, 575, 275, 250, 275];
     let b = [350, 575, 425, 275, 125, 525, 350, 175, 575, 350, 125];
-    let ball;
+    //Spieler
+    let people = [];
+    let colors = ["black", "red"];
+    let playerPosition;
     function handleLoad() {
-        football.canvas = document.querySelector("canvas");
+        football.canvasBall = document.getElementById("ball");
+        football.crc2Ball = football.canvasBall.getContext("2d");
+        football.canvasPlayers = document.getElementById("players");
+        football.crc2Players = football.canvasBall.getContext("2d");
+        football.canvas = document.getElementById("field");
         football.crc2 = football.canvas.getContext("2d");
         football.canvas.width = 1000 * football.scale;
         football.canvas.height = 700 * football.scale;
-        football.canvas.addEventListener("click", handleClick);
+        football.canvasBall.width = 1000 * football.scale;
+        football.canvasBall.height = 700 * football.scale;
+        football.canvasPlayers.width = 1000 * football.scale;
+        football.canvasPlayers.height = 700 * football.scale;
+        football.canvasBall.addEventListener("click", handleClick);
         createField();
-        placePlayersTeamOne();
-        placePlayersTeamTwo();
-        let startPos = new football.Vector(500 * football.scale, 350 * football.scale);
-        ball = new football.Ball(startPos);
-        ball.draw();
+        placePlayersTeamOne(0);
+        placePlayersTeamTwo(0);
+        football.positionBall = new football.Vector(500 * football.scale, 350 * football.scale);
+        football.ball = new football.Ball(football.positionBall);
+        football.ball.draw();
     }
     function handleClick(_event) {
         console.log("clicked");
-        let rectangle = football.canvas.getBoundingClientRect();
+        let rectangle = football.canvasBall.getBoundingClientRect();
         football.clickX = _event.clientX - rectangle.left;
         football.clickY = _event.clientY - rectangle.top;
         setInterval(moveBall, 20);
     }
     function moveBall() {
-        ball.move(1 / 50);
-        ball.draw();
+        football.crc2Ball.clearRect(0, 0, football.canvasBall.width, football.canvasBall.height);
+        football.ball.move(1 / 50);
+        football.ball.draw();
     }
-    function placePlayersTeamOne() {
+    function placePlayersTeamOne(_s) {
+        let players = [];
         for (let i = 0; i < 11; i++) {
-            football.crc2.beginPath();
-            football.crc2.arc(x[i] * football.scale, y[i] * football.scale, 10, 0, 2 * Math.PI);
-            football.crc2.strokeStyle = "black";
-            football.crc2.fillStyle = "black";
-            football.crc2.fill();
-            football.crc2.stroke();
-            football.crc2.closePath();
+            playerPosition = new football.Vector(x[_s] * football.scale, y[_s] * football.scale);
+            let player = new football.Player(playerPosition);
+            player.draw(colors[0]);
+            players.splice(_s, 0, _s);
+            _s += 1;
         }
+        people.splice(0, 0, players);
+        console.log(people[0]);
     }
-    function placePlayersTeamTwo() {
+    function placePlayersTeamTwo(_t) {
+        let players = [];
         for (let i = 0; i < 11; i++) {
-            football.crc2.beginPath();
-            football.crc2.arc(a[i] * football.scale, b[i] * football.scale, 10, 0, 2 * Math.PI);
-            football.crc2.strokeStyle = "red";
-            football.crc2.fillStyle = "red";
-            football.crc2.fill();
-            football.crc2.stroke();
-            football.crc2.closePath();
+            playerPosition = new football.Vector(a[_t] * football.scale, b[_t] * football.scale);
+            let player = new football.Player(playerPosition);
+            player.draw(colors[1]);
+            players.splice(_t, 0, _t);
+            _t += 1;
         }
+        people.splice(1, 0, players);
+        console.log(people[1]);
     }
     function createField() {
         //Mittellinie

@@ -1,9 +1,19 @@
 namespace football {
 
     window.addEventListener("load", handleLoad);
+
+    //Canvas und rendering context Spielfeld.
     export let canvas: HTMLCanvasElement;
     export let crc2: CanvasRenderingContext2D;
     export let scale: number = window.devicePixelRatio;
+
+    //Canvas und rendering context Ball.
+    export let canvasBall: HTMLCanvasElement;
+    export let crc2Ball: CanvasRenderingContext2D;
+
+    //Canvas und rendering context Spieler.
+    export let canvasPlayers: HTMLCanvasElement;
+    export let crc2Players: CanvasRenderingContext2D;
 
     //Team Eins
     let x: number[] = [10, 150, 150, 150, 150, 425, 425, 425, 725, 750, 725];
@@ -13,68 +23,89 @@ namespace football {
     let a: number[] = [990, 850, 850, 850, 850, 575, 575, 575, 275, 250, 275];
     let b: number[] = [350, 575, 425, 275, 125, 525, 350, 175, 575, 350, 125];
 
+    //Spieler
+    let people: number[][] = [];
+    let colors: string[] = ["black", "red"];
+
+    //Position des Klicks
     export let clickX: number;
     export let clickY: number;
 
-    let ball: Ball;
-    
+    export let ball: Ball;
+    export let positionBall: Vector;
+
+    let playerPosition: Vector;
+
 
 
     function handleLoad(): void {
 
-        canvas = <HTMLCanvasElement>document.querySelector("canvas");
+        canvasBall = <HTMLCanvasElement>document.getElementById("ball");
+        crc2Ball = <CanvasRenderingContext2D>canvasBall.getContext("2d");
+        canvasPlayers = <HTMLCanvasElement>document.getElementById("players");
+        crc2Players = <CanvasRenderingContext2D>canvasBall.getContext("2d");
+
+        canvas = <HTMLCanvasElement>document.getElementById("field");
         crc2 = <CanvasRenderingContext2D>canvas.getContext("2d");
+
+
+
         canvas.width = 1000 * scale;
         canvas.height = 700 * scale;
-        canvas.addEventListener("click", handleClick);
+        canvasBall.width = 1000 * scale;
+        canvasBall.height = 700 * scale;
+        canvasPlayers.width = 1000 * scale;
+        canvasPlayers.height = 700 * scale;
+        canvasBall.addEventListener("click", handleClick);
         createField();
-        placePlayersTeamOne();
-        placePlayersTeamTwo();
-        let startPos: Vector = new Vector (500 * scale, 350 * scale);
-        ball = new Ball(startPos);
+        placePlayersTeamOne(0);
+        placePlayersTeamTwo(0);
+        positionBall = new Vector(500 * scale, 350 * scale);
+        ball = new Ball(positionBall);
         ball.draw();
 
     }
 
     function handleClick(_event: MouseEvent): void {
         console.log("clicked");
-        let rectangle: DOMRect = canvas.getBoundingClientRect();
+        let rectangle: DOMRect = canvasBall.getBoundingClientRect();
         clickX = _event.clientX - rectangle.left;
         clickY = _event.clientY - rectangle.top;
         setInterval(moveBall, 20);
-        
+
     }
 
     function moveBall(): void {
+        crc2Ball.clearRect(0, 0, canvasBall.width, canvasBall.height);
         ball.move(1 / 50);
         ball.draw();
     }
 
-    function placePlayersTeamOne(): void {
-
+    function placePlayersTeamOne(_s: number): void {
+        let players: number[] = [];
         for (let i: number = 0; i < 11; i++) {
-            crc2.beginPath();
-            crc2.arc(x[i] * scale, y[i] * scale, 10, 0, 2 * Math.PI);
-            crc2.strokeStyle = "black";
-            crc2.fillStyle = "black";
-            crc2.fill();
-            crc2.stroke();
-            crc2.closePath();
+            playerPosition = new Vector(x[_s] * scale, y[_s] * scale);
+            let player: Player = new Player(playerPosition);
+            player.draw(colors[0]);
+            players.splice(_s, 0, _s);
+            _s += 1;
         }
-
+        people.splice(0, 0, players);
+        console.log(people[0]);
     }
 
-    function placePlayersTeamTwo(): void {
+    function placePlayersTeamTwo(_t: number): void {
+        let players: number[] = [];
 
         for (let i: number = 0; i < 11; i++) {
-            crc2.beginPath();
-            crc2.arc(a[i] * scale, b[i] * scale, 10, 0, 2 * Math.PI);
-            crc2.strokeStyle = "red";
-            crc2.fillStyle = "red";
-            crc2.fill();
-            crc2.stroke();
-            crc2.closePath();
+            playerPosition = new Vector(a[_t] * scale, b[_t] * scale);
+            let player: Player = new Player(playerPosition);
+            player.draw(colors[1]);
+            players.splice(_t, 0, _t);
+            _t += 1;
         }
+        people.splice(1, 0, players);
+        console.log(people[1]);
     }
 
     function createField(): void {

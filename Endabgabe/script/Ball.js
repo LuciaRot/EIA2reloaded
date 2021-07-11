@@ -3,27 +3,29 @@ var football;
 (function (football) {
     class Ball {
         constructor(_position) {
-            console.log("hello");
+            /* console.log("hello"); */
             /* this.velocity = new Vector(Math.floor(Math.random() * 100), Math.floor(Math.random() * 200)); */
             this.position = _position;
         }
         draw() {
-            football.crc2.save();
-            football.crc2.beginPath();
-            football.crc2.arc(this.position.x, this.position.y, 7, 0, 2 * Math.PI);
-            football.crc2.strokeStyle = "black";
-            football.crc2.fillStyle = "white";
-            football.crc2.lineWidth = 2;
-            football.crc2.fill();
-            football.crc2.stroke();
-            football.crc2.closePath();
-            football.crc2.restore();
+            /* console.log(crc2Ball); */
+            football.crc2Ball.save();
+            football.crc2Ball.beginPath();
+            football.crc2Ball.arc(this.position.x, this.position.y, 7, 0, 2 * Math.PI);
+            football.crc2Ball.strokeStyle = "black";
+            football.crc2Ball.fillStyle = "white";
+            football.crc2Ball.lineWidth = 2;
+            football.crc2Ball.fill();
+            football.crc2Ball.stroke();
+            football.crc2Ball.closePath();
+            football.crc2Ball.restore();
         }
         move(_timeslice) {
             this.direction = new football.Vector(football.clickX - this.position.x, football.clickY - this.position.y);
             let offset = new football.Vector(this.direction.x, this.direction.y);
             offset.scale(_timeslice);
             this.position.add(offset);
+            football.positionBall = this.position;
         }
     }
     football.Ball = Ball;

@@ -1,6 +1,28 @@
 canvas {
-    background-color: green;
-    margin: auto;
-    margin-top: 3%;
-    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
 }
+
+
+#field {
+    background-color: green;
+    margin-top: 3%;
+    margin-left: 3%;
+}
+
+#players {
+    background-color: rgba(0, 0, 0, 0);
+    margin-top: 3%;
+    margin-left: 3%;
+
+}
+
+#ball {
+    background-color: rgba(0, 0, 0, 0);
+    margin-top: 3%;
+    margin-left: 3%;
+
+}
+
+
