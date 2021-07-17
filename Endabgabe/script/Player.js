@@ -19,7 +19,7 @@ var football;
             football.crc2Players.stroke();
             football.crc2Players.closePath();
         }
-        move(_timesclice) {
+        move() {
             this.direction = new football.Vector(football.positionBall.x - this.position.x, football.positionBall.y - this.position.y);
             this.direction.scale(this.speed);
             this.position.add(this.direction);
@@ -32,7 +32,7 @@ var football;
             this.distance = Math.sqrt(shoot.x * shoot.x + shoot.y * shoot.y);
             let rad = Math.atan2(shoot.x, shoot.y);
             this.angle = rad / Math.PI * 180;
-            if (Math.floor(Math.sqrt(shoot.x * shoot.x + shoot.y * shoot.y)) <= 300 * football.scale) {
+            if (Math.floor(this.distance) <= 300 * football.scale) {
                 this.near = true;
             }
             else {
