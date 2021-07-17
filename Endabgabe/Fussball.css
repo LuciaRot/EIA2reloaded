@@ -25,4 +25,16 @@ canvas {
 
 }
 
+div {
+    display: inline;
+    position:relative;
+    width: 200px;
+    height: 600px;
+    left: 75%;
+
+}
+ fieldset {
+     width: 200px;
+ }
+
 

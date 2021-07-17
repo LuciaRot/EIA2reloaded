@@ -22,6 +22,11 @@ namespace football {
             this.x += _addend.x;
             this.y += _addend.y;
         }
+
+        subtract(_subtrahend: Vector): void {
+            this.x -= _subtrahend.x;
+            this.y -= _subtrahend.y;
+        }
     }
 
 

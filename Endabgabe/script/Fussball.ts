@@ -15,6 +15,16 @@ namespace football {
     export let canvasPlayers: HTMLCanvasElement;
     export let crc2Players: CanvasRenderingContext2D;
 
+    //Elemente der HTML Datei
+    let colorOne: HTMLInputElement;
+    let colorTwo: HTMLInputElement;
+    let minSpeedInput: HTMLInputElement;
+    let maxSpeedInput: HTMLInputElement;
+    let form: HTMLDivElement;
+    export let minSpeed: number;
+    export let maxSpeed: number;
+
+
     //Team Eins
     let x: number[] = [10, 150, 150, 150, 150, 425, 425, 425, 725, 750, 725];
     let y: number[] = [350, 125, 275, 425, 575, 175, 350, 525, 125, 350, 575];
@@ -24,8 +34,8 @@ namespace football {
     let b: number[] = [350, 575, 425, 275, 125, 525, 350, 175, 575, 350, 125];
 
     //Spieler
-    let people: number[][] = [];
-    let colors: string[] = ["black", "red"];
+    export let people: Player[] = [];
+    export let colors: string[];
 
     //Position des Klicks
     export let clickX: number;
@@ -34,7 +44,10 @@ namespace football {
     export let ball: Ball;
     export let positionBall: Vector;
 
-    let playerPosition: Vector;
+    export let playerPosition: Vector;
+
+    export let i: number = 0;
+    export let j: number = 6;
 
 
 
@@ -43,11 +56,9 @@ namespace football {
         canvasBall = <HTMLCanvasElement>document.getElementById("ball");
         crc2Ball = <CanvasRenderingContext2D>canvasBall.getContext("2d");
         canvasPlayers = <HTMLCanvasElement>document.getElementById("players");
-        crc2Players = <CanvasRenderingContext2D>canvasBall.getContext("2d");
-
+        crc2Players = <CanvasRenderingContext2D>canvasPlayers.getContext("2d");
         canvas = <HTMLCanvasElement>document.getElementById("field");
         crc2 = <CanvasRenderingContext2D>canvas.getContext("2d");
-
 
 
         canvas.width = 1000 * scale;
@@ -58,55 +69,162 @@ namespace football {
         canvasPlayers.height = 700 * scale;
         canvasBall.addEventListener("click", handleClick);
         createField();
-        placePlayersTeamOne(0);
-        placePlayersTeamTwo(0);
+        minSpeed = 100;
+        maxSpeed = 200;
+        colors = ["black", "red"];
+        placePlayersTeamOne();
+        placePlayersTeamTwo();
+        /* console.log(people); */
         positionBall = new Vector(500 * scale, 350 * scale);
         ball = new Ball(positionBall);
         ball.draw();
+        colorOne = <HTMLInputElement>document.querySelector("input#colorOne");
+        colorTwo = <HTMLInputElement>document.querySelector("input#colorTwo");
+        minSpeedInput = <HTMLInputElement>document.querySelector("input#minspeed");
+        maxSpeedInput = <HTMLInputElement>document.querySelector("input#maxspeed");
+
+        form = <HTMLDivElement>document.querySelector("div#form");
+        minSpeedInput.addEventListener("input", setMinSpeed);
+        maxSpeedInput.addEventListener("input", setMaxSpeed);
+        colorOne.addEventListener("input", setColor);
+        colorTwo.addEventListener("input", setColor);
+
+        form.addEventListener("change", handleChange);
+
+        
+
 
     }
+
+    function setColor(_event: Event): void {
+        let color: string = (<HTMLInputElement>_event.target).value;
+       /*  console.log(_event.target);
+        console.log(colorOne); */
+        if (_event.target == colorOne) {
+            for (let i: number = 0; i < 11; i++) {
+            colors[0] = color;
+            let player: Player = people[i];
+            player.changeColor(color);
+            console.log(player.color);
+            placePlayersTeamOne();
+            }
+        }
+        else {
+            colors[1] = color;
+            for (let i: number = 11; i < 22; i++) {
+                colors[1] = color;
+                let player: Player = people[i];
+                player.changeColor(color);
+                placePlayersTeamTwo();
+                }
+                
+        }
+        
+    }
+
+    function setMinSpeed(_event: Event): void {
+        let amount: string = (<HTMLInputElement>_event.target).value;
+        console.log(amount);
+        minSpeed = parseFloat(amount);
+
+        for (let player of people) {
+            player.changeSpeed(minSpeed, maxSpeed);
+        }
+    }
+
+    function setMaxSpeed(_event: Event): void {
+        let amount: string = (<HTMLInputElement>_event.target).value;
+        console.log(amount);
+        maxSpeed = parseFloat(amount);
+
+        for (let player of people) {
+            player.changeSpeed(minSpeed, maxSpeed);
+        }
+    }
+
+    function handleChange(_event: Event): void {
+        console.log(_event);
+        }
 
     function handleClick(_event: MouseEvent): void {
-        console.log("clicked");
+        /* console.log("clicked"); */
         let rectangle: DOMRect = canvasBall.getBoundingClientRect();
-        clickX = _event.clientX - rectangle.left;
-        clickY = _event.clientY - rectangle.top;
+        clickX = Math.floor(_event.clientX - rectangle.left);
+        clickY = Math.floor(_event.clientY - rectangle.top);
+        console.log(clickX, clickY);
+
         setInterval(moveBall, 20);
 
+        /* console.log(people); */
+        for (let player of people) {
+            player.checkPosition();
+            crc2Players.clearRect(0, 0, canvasPlayers.width, canvasPlayers.height);
+            if (player.near == true) {
+                player.move();
+                
+            }
+            player.draw();
+        }
+        
+
     }
+
+
 
     function moveBall(): void {
         crc2Ball.clearRect(0, 0, canvasBall.width, canvasBall.height);
+        /*  if (clickX == positionBall.x && clickY == positionBall.y) {
+             clearInterval();
+         } */
         ball.move(1 / 50);
         ball.draw();
     }
 
-    function placePlayersTeamOne(_s: number): void {
-        let players: number[] = [];
-        for (let i: number = 0; i < 11; i++) {
-            playerPosition = new Vector(x[_s] * scale, y[_s] * scale);
-            let player: Player = new Player(playerPosition);
-            player.draw(colors[0]);
-            players.splice(_s, 0, _s);
-            _s += 1;
+    function movePlayer(): void {
+        let playerX: number = people[j].position.x - 7;
+        let playerY: number = people[j].position.y - 7;
+        let playerXTwo: number = people[j].position.x + 7;
+        let playerYTwo: number = people[j].position.y + 7;
+        let distance: Vector = new Vector(positionBall.x - people[j].position.x, positionBall.y - people[j].position.y);
+        console.log(Math.sqrt(distance.x * distance.x + distance.y * distance.y));
+        if (Math.sqrt(distance.x * distance.x + distance.y * distance.y) <= 300 * scale) {
+            console.log("near");
+            crc2Players.clearRect(playerX, playerY, playerXTwo, playerYTwo);
+            people[j].move();
+            people[j].draw();
+
         }
-        people.splice(0, 0, players);
-        console.log(people[0]);
     }
 
-    function placePlayersTeamTwo(_t: number): void {
-        let players: number[] = [];
+
+    function placePlayersTeamOne(): void {
 
         for (let i: number = 0; i < 11; i++) {
-            playerPosition = new Vector(a[_t] * scale, b[_t] * scale);
-            let player: Player = new Player(playerPosition);
-            player.draw(colors[1]);
-            players.splice(_t, 0, _t);
-            _t += 1;
+            playerPosition = new Vector(x[i] * scale, y[i] * scale);
+            let player: Player = new Player(playerPosition, colors[0], i);
+            player.draw();
+            people.splice(i, 1, player);
+
         }
-        people.splice(1, 0, players);
-        console.log(people[1]);
+        console.log(people);
     }
+
+    function placePlayersTeamTwo(): void {
+
+        for (let i: number = 11; i < 22; i++) {
+            playerPosition = new Vector(a[i - 11] * scale, b[i - 11] * scale);
+            let player: Player = new Player(playerPosition, colors[1], i);
+            player.draw();
+            people.splice(i, 1, player);
+
+        }
+
+        /* console.log(people); */
+    }
+
+    /* function showStats(): void {
+        console.log(people[i]);
+    } */
 
     function createField(): void {
         //Mittellinie

@@ -17,6 +17,10 @@ var football;
             this.x += _addend.x;
             this.y += _addend.y;
         }
+        subtract(_subtrahend) {
+            this.x -= _subtrahend.x;
+            this.y -= _subtrahend.y;
+        }
     }
     football.Vector = Vector;
 })(football || (football = {}));

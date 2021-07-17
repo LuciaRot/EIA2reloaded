@@ -14,6 +14,7 @@ namespace football {
 
                 draw(): void {
                         /* console.log(crc2Ball); */
+                        let newPosition: Vector = new Vector(Math.floor(this.position.x), Math.floor(this.position.y));
                         crc2Ball.save();
                         crc2Ball.beginPath();
                         crc2Ball.arc(this.position.x, this.position.y, 7, 0, 2 * Math.PI);
@@ -24,6 +25,8 @@ namespace football {
                         crc2Ball.stroke();
                         crc2Ball.closePath();
                         crc2Ball.restore();
+                        positionBall = newPosition;
+                        /* console.log(positionBall); */
                 }
 
                 move(_timeslice: number): void {

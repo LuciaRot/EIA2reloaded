@@ -9,6 +9,7 @@ var football;
         }
         draw() {
             /* console.log(crc2Ball); */
+            let newPosition = new football.Vector(Math.floor(this.position.x), Math.floor(this.position.y));
             football.crc2Ball.save();
             football.crc2Ball.beginPath();
             football.crc2Ball.arc(this.position.x, this.position.y, 7, 0, 2 * Math.PI);
@@ -19,6 +20,8 @@ var football;
             football.crc2Ball.stroke();
             football.crc2Ball.closePath();
             football.crc2Ball.restore();
+            football.positionBall = newPosition;
+            /* console.log(positionBall); */
         }
         move(_timeslice) {
             this.direction = new football.Vector(football.clickX - this.position.x, football.clickY - this.position.y);

@@ -3,6 +3,12 @@ var football;
 (function (football) {
     window.addEventListener("load", handleLoad);
     football.scale = window.devicePixelRatio;
+    //Elemente der HTML Datei
+    let colorOne;
+    let colorTwo;
+    let minSpeedInput;
+    let maxSpeedInput;
+    let form;
     //Team Eins
     let x = [10, 150, 150, 150, 150, 425, 425, 425, 725, 750, 725];
     let y = [350, 125, 275, 425, 575, 175, 350, 525, 125, 350, 575];
@@ -10,14 +16,14 @@ var football;
     let a = [990, 850, 850, 850, 850, 575, 575, 575, 275, 250, 275];
     let b = [350, 575, 425, 275, 125, 525, 350, 175, 575, 350, 125];
     //Spieler
-    let people = [];
-    let colors = ["black", "red"];
-    let playerPosition;
+    football.people = [];
+    football.i = 0;
+    football.j = 6;
     function handleLoad() {
         football.canvasBall = document.getElementById("ball");
         football.crc2Ball = football.canvasBall.getContext("2d");
         football.canvasPlayers = document.getElementById("players");
-        football.crc2Players = football.canvasBall.getContext("2d");
+        football.crc2Players = football.canvasPlayers.getContext("2d");
         football.canvas = document.getElementById("field");
         football.crc2 = football.canvas.getContext("2d");
         football.canvas.width = 1000 * football.scale;
@@ -28,48 +34,128 @@ var football;
         football.canvasPlayers.height = 700 * football.scale;
         football.canvasBall.addEventListener("click", handleClick);
         createField();
-        placePlayersTeamOne(0);
-        placePlayersTeamTwo(0);
+        football.minSpeed = 100;
+        football.maxSpeed = 200;
+        football.colors = ["black", "red"];
+        placePlayersTeamOne();
+        placePlayersTeamTwo();
+        /* console.log(people); */
         football.positionBall = new football.Vector(500 * football.scale, 350 * football.scale);
         football.ball = new football.Ball(football.positionBall);
         football.ball.draw();
+        colorOne = document.querySelector("input#colorOne");
+        colorTwo = document.querySelector("input#colorTwo");
+        minSpeedInput = document.querySelector("input#minspeed");
+        maxSpeedInput = document.querySelector("input#maxspeed");
+        form = document.querySelector("div#form");
+        minSpeedInput.addEventListener("input", setMinSpeed);
+        maxSpeedInput.addEventListener("input", setMaxSpeed);
+        colorOne.addEventListener("input", setColor);
+        colorTwo.addEventListener("input", setColor);
+        form.addEventListener("change", handleChange);
+    }
+    function setColor(_event) {
+        let color = _event.target.value;
+        /*  console.log(_event.target);
+         console.log(colorOne); */
+        if (_event.target == colorOne) {
+            for (let i = 0; i < 11; i++) {
+                football.colors[0] = color;
+                let player = football.people[i];
+                player.changeColor(color);
+                console.log(player.color);
+                placePlayersTeamOne();
+            }
+        }
+        else {
+            football.colors[1] = color;
+            for (let i = 11; i < 22; i++) {
+                football.colors[1] = color;
+                let player = football.people[i];
+                player.changeColor(color);
+                placePlayersTeamTwo();
+            }
+        }
+    }
+    function setMinSpeed(_event) {
+        let amount = _event.target.value;
+        console.log(amount);
+        football.minSpeed = parseFloat(amount);
+        for (let player of football.people) {
+            player.changeSpeed(football.minSpeed, football.maxSpeed);
+        }
+    }
+    function setMaxSpeed(_event) {
+        let amount = _event.target.value;
+        console.log(amount);
+        football.maxSpeed = parseFloat(amount);
+        for (let player of football.people) {
+            player.changeSpeed(football.minSpeed, football.maxSpeed);
+        }
+    }
+    function handleChange(_event) {
+        console.log(_event);
     }
     function handleClick(_event) {
-        console.log("clicked");
+        /* console.log("clicked"); */
         let rectangle = football.canvasBall.getBoundingClientRect();
-        football.clickX = _event.clientX - rectangle.left;
-        football.clickY = _event.clientY - rectangle.top;
+        football.clickX = Math.floor(_event.clientX - rectangle.left);
+        football.clickY = Math.floor(_event.clientY - rectangle.top);
+        console.log(football.clickX, football.clickY);
         setInterval(moveBall, 20);
+        /* console.log(people); */
+        for (let player of football.people) {
+            player.checkPosition();
+            football.crc2Players.clearRect(0, 0, football.canvasPlayers.width, football.canvasPlayers.height);
+            if (player.near == true) {
+                player.move();
+            }
+            player.draw();
+        }
     }
     function moveBall() {
         football.crc2Ball.clearRect(0, 0, football.canvasBall.width, football.canvasBall.height);
+        /*  if (clickX == positionBall.x && clickY == positionBall.y) {
+             clearInterval();
+         } */
         football.ball.move(1 / 50);
         football.ball.draw();
     }
-    function placePlayersTeamOne(_s) {
-        let players = [];
-        for (let i = 0; i < 11; i++) {
-            playerPosition = new football.Vector(x[_s] * football.scale, y[_s] * football.scale);
-            let player = new football.Player(playerPosition);
-            player.draw(colors[0]);
-            players.splice(_s, 0, _s);
-            _s += 1;
+    function movePlayer() {
+        let playerX = football.people[football.j].position.x - 7;
+        let playerY = football.people[football.j].position.y - 7;
+        let playerXTwo = football.people[football.j].position.x + 7;
+        let playerYTwo = football.people[football.j].position.y + 7;
+        let distance = new football.Vector(football.positionBall.x - football.people[football.j].position.x, football.positionBall.y - football.people[football.j].position.y);
+        console.log(Math.sqrt(distance.x * distance.x + distance.y * distance.y));
+        if (Math.sqrt(distance.x * distance.x + distance.y * distance.y) <= 300 * football.scale) {
+            console.log("near");
+            football.crc2Players.clearRect(playerX, playerY, playerXTwo, playerYTwo);
+            football.people[football.j].move();
+            football.people[football.j].draw();
         }
-        people.splice(0, 0, players);
-        console.log(people[0]);
     }
-    function placePlayersTeamTwo(_t) {
-        let players = [];
+    function placePlayersTeamOne() {
         for (let i = 0; i < 11; i++) {
-            playerPosition = new football.Vector(a[_t] * football.scale, b[_t] * football.scale);
-            let player = new football.Player(playerPosition);
-            player.draw(colors[1]);
-            players.splice(_t, 0, _t);
-            _t += 1;
+            football.playerPosition = new football.Vector(x[i] * football.scale, y[i] * football.scale);
+            let player = new football.Player(football.playerPosition, football.colors[0], i);
+            player.draw();
+            football.people.splice(i, 1, player);
         }
-        people.splice(1, 0, players);
-        console.log(people[1]);
+        console.log(football.people);
     }
+    function placePlayersTeamTwo() {
+        for (let i = 11; i < 22; i++) {
+            football.playerPosition = new football.Vector(a[i - 11] * football.scale, b[i - 11] * football.scale);
+            let player = new football.Player(football.playerPosition, football.colors[1], i);
+            player.draw();
+            football.people.splice(i, 1, player);
+        }
+        /* console.log(people); */
+    }
+    /* function showStats(): void {
+        console.log(people[i]);
+    } */
     function createField() {
         //Mittellinie
         football.crc2.beginPath();

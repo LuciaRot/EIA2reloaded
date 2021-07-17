@@ -1,0 +1,13 @@
+playerSpeed.addEventListener("input", setSpeed); in handleload
+
+function setSpeed(_event: Event): void {
+        let amount: string = (<HTMLInputElement>_event.target).value;
+        console.log(amount);
+    }
+
+    //Elemente der HTML Datei
+    let colorOne: HTMLInputElement = <HTMLInputElement>document.querySelector("input#colorOne");
+    let colorTwo: HTMLInputElement = <HTMLInputElement>document.querySelector("input#colorTwo");
+    let playerSpeed: HTMLInputElement = <HTMLInputElement>document.querySelector("input#speed");
+
+    

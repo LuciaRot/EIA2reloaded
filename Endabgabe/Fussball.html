@@ -17,6 +17,36 @@
     <canvas id="field"></canvas>
     <canvas id="players"></canvas>
     <canvas id="ball"></canvas>
+    <form>
+        <div id="form">
+            <h1>select what you want</h1>
+            <fieldset>
+                <legend>Color team one</legend>
+                <input type="color" name="ColorOne" id="colorOne" class="colorOne">
+    
+                <legend>Color team two</legend>
+                <input type="color" name="ColorTwo" id="colorTwo" class="colorTwo">
+            </fieldset>
+            <fieldset>
+                <legend>Minimal speed</legend>
+                <span id="minslider">
+                    <span>
+                        1
+                        <input type="range" name="speed" id="minspeed" min="1" max="4" step="1" value="1">
+                        4
+                    </span>
+                </span>
+                <legend>Maximum speed</legend>
+                <span id="maxslider">
+                    <span>
+                        5
+                        <input type="range" name="speed" id="maxspeed" min="5" max="10" step="1" value="5">
+                        10
+                    </span>
+                </span>
+            </fieldset>
+        </div>
+    </form>
     
 </body>
 </html>
