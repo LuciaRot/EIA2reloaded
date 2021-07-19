@@ -106,7 +106,6 @@ namespace football {
         /* console.log(people); */
         newBall();
         placeSideReferee();
-        setInterval(moveReferees, 20);
         colorOne = <HTMLInputElement>document.querySelector("input#colorOne");
         colorTwo = <HTMLInputElement>document.querySelector("input#colorTwo");
         minSpeedInput = <HTMLInputElement>document.querySelector("input#minspeed");
@@ -129,7 +128,6 @@ namespace football {
         colorOne.addEventListener("input", setColor);
         colorTwo.addEventListener("input", setColor);
 
-        form.addEventListener("change", handleChange);
 
 
 
@@ -186,7 +184,7 @@ namespace football {
         }
     }
 
-    function setMaxSpeed(_event: Event): void {
+    function setMaxSpeed(_event: Event): void { 
         let amount: string = (<HTMLInputElement>_event.target).value;
         console.log(amount);
         maxSpeed = parseFloat(amount);
@@ -217,9 +215,7 @@ namespace football {
         console.log(people);
     }
 
-    function handleChange(_event: Event): void {
-        console.log(_event);
-    }
+    
 
     function handleClick(_event: MouseEvent): void {
         /* console.log("clicked"); */

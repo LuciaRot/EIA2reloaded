@@ -62,7 +62,6 @@ var football;
         /* console.log(people); */
         newBall();
         placeSideReferee();
-        setInterval(moveReferees, 20);
         colorOne = document.querySelector("input#colorOne");
         colorTwo = document.querySelector("input#colorTwo");
         minSpeedInput = document.querySelector("input#minspeed");
@@ -83,7 +82,6 @@ var football;
         maxPrecisionInput.addEventListener("input", setMaxPrecision);
         colorOne.addEventListener("input", setColor);
         colorTwo.addEventListener("input", setColor);
-        form.addEventListener("change", handleChange);
     }
     function placeSideReferee() {
         let position = new football.Vector(10 * football.scale, 1 * football.scale);
@@ -151,9 +149,6 @@ var football;
             player.changePrecision(minPrecision, maxPrecision);
         }
         console.log(football.people);
-    }
-    function handleChange(_event) {
-        console.log(_event);
     }
     function handleClick(_event) {
         /* console.log("clicked"); */
