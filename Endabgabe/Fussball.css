@@ -25,6 +25,11 @@ canvas {
 
 }
 
+#referee {
+    background-color: rgba(0, 0, 0, 0);
+    margin-left: 3%;
+}
+
 div {
     display: inline;
     position:relative;
@@ -37,4 +42,27 @@ div {
      width: 200px;
  }
 
+ body {
+     font-family: Arial, Helvetica, sans-serif;
+ }
+
+ #scoreOne {
+    display: inline;
+ }
+
+ #scorediv {
+     width: 100px;
+     height: 200px;
+
+ }
+
+ p {
+     font-size: xx-large;
+ }
+
+ #scoreTwo {
+     display: inline;
+ }
+
+ 
 

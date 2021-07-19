@@ -9,12 +9,22 @@
     <script src="script/Ball.js"></script>
     <script src="script/Player.js"></script>
     <script src="script/Vector.js"></script>
+    <script src="script/Referee.js"></script>
     <script src="script/Fussball.js"></script>
     
     
 </head>
 <body>
+    <div id="scoreDiv">
+        <h1>Score</h1> 
+        <p id="scoreOne">0 : </p><p id="scoreTwo">0</p>
+    </div>
+    <div id="currentPlayerDiv">
+        <h1>Player with ball</h1>
+        <p id="currentPlayer">        </p>
+    </div>
     <canvas id="field"></canvas>
+    <canvas id="referee"></canvas>
     <canvas id="players"></canvas>
     <canvas id="ball"></canvas>
     <form>
@@ -45,8 +55,31 @@
                     </span>
                 </span>
             </fieldset>
+            <fieldset>
+                <legend>Minimal precision</legend>
+                <span id="minPslider">
+                    <span>
+                        1
+                        <input type="range" name="precision" id="minprecision" min="1" max="4" step="1" value="1">
+                        4
+                    </span>
+                </span>
+                <legend>Maximum precision</legend>
+                <span id="maxPslider">
+                    <span>
+                        5
+                        <input type="range" name="precision" id="maxprecision" min="5" max="10" step="1" value="5">
+                        10
+                    </span>
+                </span>
+            </fieldset>
         </div>
     </form>
+    <div id="playerStats">
+        <p id="playerNumber"></p>
+        <p id="playerSpeed"></p>
+        <p id="playerPrecision"></p>
+    </div>
     
 </body>
 </html>

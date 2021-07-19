@@ -3,13 +3,14 @@ namespace football {
         export class Ball {
                 position: Vector;
                 direction: Vector;
+                goal: boolean;
 
 
                 constructor(_position: Vector) {
                         /* console.log("hello"); */
                         /* this.velocity = new Vector(Math.floor(Math.random() * 100), Math.floor(Math.random() * 200)); */
                         this.position = _position;
-                        
+                        this.goal = false;
                 }
 
                 draw(): void {
@@ -26,7 +27,8 @@ namespace football {
                         crc2Ball.closePath();
                         crc2Ball.restore();
                         positionBall = newPosition;
-                        /* console.log(positionBall); */
+                        
+                        
                 }
 
                 move(_timeslice: number): void {
@@ -34,7 +36,10 @@ namespace football {
                         let offset: Vector = new Vector(this.direction.x, this.direction.y);
                         offset.scale(_timeslice);
                         this.position.add(offset);
-                        positionBall = this.position;
+                        console.log(this.position);
+                        let help: Vector = new Vector(Math.floor(this.position.x), Math.floor(this.position.y));
+                        positionBall = help;
+                        
                 }
 
         }

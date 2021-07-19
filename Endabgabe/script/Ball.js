@@ -6,6 +6,7 @@ var football;
             /* console.log("hello"); */
             /* this.velocity = new Vector(Math.floor(Math.random() * 100), Math.floor(Math.random() * 200)); */
             this.position = _position;
+            this.goal = false;
         }
         draw() {
             /* console.log(crc2Ball); */
@@ -21,14 +22,15 @@ var football;
             football.crc2Ball.closePath();
             football.crc2Ball.restore();
             football.positionBall = newPosition;
-            /* console.log(positionBall); */
         }
         move(_timeslice) {
             this.direction = new football.Vector(football.clickX - this.position.x, football.clickY - this.position.y);
             let offset = new football.Vector(this.direction.x, this.direction.y);
             offset.scale(_timeslice);
             this.position.add(offset);
-            football.positionBall = this.position;
+            console.log(this.position);
+            let help = new football.Vector(Math.floor(this.position.x), Math.floor(this.position.y));
+            football.positionBall = help;
         }
     }
     football.Ball = Ball;

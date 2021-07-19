@@ -15,14 +15,28 @@ namespace football {
     export let canvasPlayers: HTMLCanvasElement;
     export let crc2Players: CanvasRenderingContext2D;
 
+    //Canvas und rendering context Schiedsrichter.
+    export let canvasReferee: HTMLCanvasElement;
+    export let crc2Referee: CanvasRenderingContext2D;
+
     //Elemente der HTML Datei
     let colorOne: HTMLInputElement;
     let colorTwo: HTMLInputElement;
     let minSpeedInput: HTMLInputElement;
     let maxSpeedInput: HTMLInputElement;
+    let minPrecisionInput: HTMLInputElement;
+    let maxPrecisionInput: HTMLInputElement;
     let form: HTMLDivElement;
-    export let minSpeed: number;
-    export let maxSpeed: number;
+    export let minSpeed: number = 1;
+    export let maxSpeed: number = 5;
+    let minPrecision: number = 1;
+    let maxPrecision: number = 5;
+    let scoreTeamOne: HTMLElement;
+    let scoreTeamTwo: HTMLElement;
+    let currentPlayer: HTMLElement;
+    let playerNumber: HTMLElement;
+    let playerSpeed: HTMLElement;
+    let playerPrecision: HTMLElement;
 
 
     //Team Eins
@@ -36,10 +50,13 @@ namespace football {
     //Spieler
     export let people: Player[] = [];
     export let colors: string[];
+    export let referees: Referee[] = [];
 
-    //Position des Klicks
+    //Position des Klicks 
     export let clickX: number;
     export let clickY: number;
+
+
 
     export let ball: Ball;
     export let positionBall: Vector;
@@ -49,6 +66,13 @@ namespace football {
     export let i: number = 0;
     export let j: number = 6;
 
+    //Spielstand
+    let scores: number[] = [0, 0];
+
+    let ballMovement: number;
+    let playerMovement: number;
+
+    let clicked: boolean;
 
 
     function handleLoad(): void {
@@ -57,8 +81,12 @@ namespace football {
         crc2Ball = <CanvasRenderingContext2D>canvasBall.getContext("2d");
         canvasPlayers = <HTMLCanvasElement>document.getElementById("players");
         crc2Players = <CanvasRenderingContext2D>canvasPlayers.getContext("2d");
+        
         canvas = <HTMLCanvasElement>document.getElementById("field");
         crc2 = <CanvasRenderingContext2D>canvas.getContext("2d");
+
+        canvasReferee = <HTMLCanvasElement>document.getElementById("referee");
+        crc2Referee = <CanvasRenderingContext2D>canvas.getContext("2d");
 
 
         canvas.width = 1000 * scale;
@@ -67,46 +95,72 @@ namespace football {
         canvasBall.height = 700 * scale;
         canvasPlayers.width = 1000 * scale;
         canvasPlayers.height = 700 * scale;
+        canvasReferee.width = 1000 * scale;
+        canvasReferee.height = 800 * scale;
         canvasBall.addEventListener("click", handleClick);
         createField();
-        minSpeed = 100;
-        maxSpeed = 200;
+
         colors = ["black", "red"];
         placePlayersTeamOne();
         placePlayersTeamTwo();
         /* console.log(people); */
-        positionBall = new Vector(500 * scale, 350 * scale);
-        ball = new Ball(positionBall);
-        ball.draw();
+        newBall();
+        placeSideReferee();
+        setInterval(moveReferees, 20);
         colorOne = <HTMLInputElement>document.querySelector("input#colorOne");
         colorTwo = <HTMLInputElement>document.querySelector("input#colorTwo");
         minSpeedInput = <HTMLInputElement>document.querySelector("input#minspeed");
         maxSpeedInput = <HTMLInputElement>document.querySelector("input#maxspeed");
+        minPrecisionInput = <HTMLInputElement>document.querySelector("input#minprecision");
+        maxPrecisionInput = <HTMLInputElement>document.querySelector("input#maxprecision");
 
         form = <HTMLDivElement>document.querySelector("div#form");
+        scoreTeamOne = <HTMLElement>document.querySelector("p#scoreOne");
+        scoreTeamTwo = <HTMLElement>document.querySelector("p#scoreTwo");
+        currentPlayer = <HTMLElement>document.querySelector("p#currentPlayer");
+        playerNumber = <HTMLElement>document.querySelector("p#playerNumber");
+        playerSpeed = <HTMLElement>document.querySelector("p#playerSpeed");
+        playerPrecision = <HTMLElement>document.querySelector("p#playerPrecision");
+        clicked = false;
         minSpeedInput.addEventListener("input", setMinSpeed);
         maxSpeedInput.addEventListener("input", setMaxSpeed);
+        minPrecisionInput.addEventListener("input", setMinPrecision);
+        maxPrecisionInput.addEventListener("input", setMaxPrecision);
         colorOne.addEventListener("input", setColor);
         colorTwo.addEventListener("input", setColor);
 
         form.addEventListener("change", handleChange);
 
-        
 
 
     }
 
+    function placeSideReferee(): void {
+        
+            let position: Vector = new Vector(10 * scale, 1 * scale);
+            let refereeOne: Referee = new Referee(position);
+            refereeOne.draw();
+            referees.splice(0, 0, refereeOne);
+
+            let positionTwo: Vector = new Vector(10 * scale, 845 / scale);
+            let refereeTwo: Referee = new Referee(positionTwo);
+            refereeTwo.draw();
+            referees.splice(1, 0, refereeTwo);
+            console.log(referees);
+    }
+   
+
     function setColor(_event: Event): void {
         let color: string = (<HTMLInputElement>_event.target).value;
-       /*  console.log(_event.target);
-        console.log(colorOne); */
+        /*  console.log(_event.target);
+         console.log(colorOne); */
         if (_event.target == colorOne) {
             for (let i: number = 0; i < 11; i++) {
-            colors[0] = color;
-            let player: Player = people[i];
-            player.changeColor(color);
-            console.log(player.color);
-            placePlayersTeamOne();
+                colors[0] = color;
+                let player: Player = people[i];
+                player.changeColor(color);
+                console.log(player.color);
+                placePlayersTeamOne();
             }
         }
         else {
@@ -116,10 +170,10 @@ namespace football {
                 let player: Player = people[i];
                 player.changeColor(color);
                 placePlayersTeamTwo();
-                }
-                
+            }
+
         }
-        
+
     }
 
     function setMinSpeed(_event: Event): void {
@@ -142,58 +196,178 @@ namespace football {
         }
     }
 
+    function setMinPrecision(_event: Event): void {
+        let amount: string = (<HTMLInputElement>_event.target).value;
+        console.log(amount);
+        minPrecision = parseFloat(amount);
+
+        for (let player of people) {
+            player.changePrecision(minPrecision, maxPrecision);
+        }
+    }
+
+    function setMaxPrecision(_event: Event): void {
+        let amount: string = (<HTMLInputElement>_event.target).value;
+        console.log(amount);
+        maxPrecision = parseFloat(amount);
+
+        for (let player of people) {
+            player.changePrecision(minPrecision, maxPrecision);
+        }
+        console.log(people);
+    }
+
     function handleChange(_event: Event): void {
         console.log(_event);
-        }
+    }
 
     function handleClick(_event: MouseEvent): void {
         /* console.log("clicked"); */
-        let rectangle: DOMRect = canvasBall.getBoundingClientRect();
-        clickX = Math.floor(_event.clientX - rectangle.left);
-        clickY = Math.floor(_event.clientY - rectangle.top);
-        console.log(clickX, clickY);
+            let rectangleB: DOMRect = canvasBall.getBoundingClientRect();
+            clickX = Math.floor(_event.clientX - rectangleB.left);
+            clickY = Math.floor(_event.clientY - rectangleB.top);
+            console.log(clickX, clickY);
 
-        setInterval(moveBall, 20);
-
-        /* console.log(people); */
-        for (let player of people) {
-            player.checkPosition();
-            crc2Players.clearRect(0, 0, canvasPlayers.width, canvasPlayers.height);
-            if (player.near == true) {
-                player.move();
-                
+            if (clicked == true) {
+                clicked = false;
             }
-            player.draw();
-        }
-        
 
+            for (let player of people) {
+                player.checkClick(clickX, clickY);
+                if (player.clicked == true) {
+                    playerNumber.innerHTML = "Player " + player.playerNumber;
+                    playerSpeed.innerHTML = "Speed " + player.speed;
+                    playerPrecision.innerHTML = "Precision " + player.precision;
+                    player.clicked = false;
+                    clicked = true;
+
+                }
+            }
+
+            if (clicked == false) {
+                playerNumber.innerHTML = "";
+                playerSpeed.innerHTML = "";
+                playerPrecision.innerHTML = "";
+                ballMovement = setInterval(moveBall, 20);
+                playerMovement = setInterval(movePlayer, 20);
+            }   
+    }
+
+
+
+    function setScore(): void {
+        if (ball.goal == false) {
+            let scoreOne: number = scores[0];
+            let scoreTwo: number = scores[1];
+            if (994 * scale <= positionBall.x && positionBall.x <= 1000 * scale && 315 * scale <= positionBall.y && positionBall.y <= 385 * scale) {
+                scoreOne += 1;
+                scores.splice(0, 1, scoreOne);
+                scoreTeamOne.innerHTML = scoreOne.toString() + ":";
+                ball.goal = true;
+                clearInterval(ballMovement);
+
+                newBall();
+            }
+            else if (0 <= positionBall.x && positionBall.x <= 6 * scale && 315 * scale << positionBall.y && positionBall.y <= 385 * scale) {
+                scoreTwo += 1;
+                scores.splice(1, 1, scoreTwo);
+                scoreTeamTwo.innerHTML = scoreTwo.toString();
+                ball.goal = true;
+                clearInterval(ballMovement);
+
+                newBall();
+
+            }
+        }
+    }
+
+    function newBall(): void {
+        crc2Ball.clearRect(0, 0, canvasBall.width, canvasBall.height);
+        positionBall = new Vector(500 * scale, 350 * scale);
+        ball = new Ball(positionBall);
+        ball.draw();
     }
 
 
 
     function moveBall(): void {
+        let minX: number = clickX - 1;
+        let maxX: number = clickX + 1;
+        let minY: number = clickY - 1;
+        let maxY: number = clickY + 1;
         crc2Ball.clearRect(0, 0, canvasBall.width, canvasBall.height);
-        /*  if (clickX == positionBall.x && clickY == positionBall.y) {
-             clearInterval();
-         } */
+
         ball.move(1 / 50);
         ball.draw();
+        /* console.log(positionBall, clickX, clickY); */
+        if (minX <= positionBall.x && positionBall.x <= maxX && minY <= positionBall.y && positionBall.y <= maxY) {
+            clearInterval(ballMovement);
+            setScore();
+
+        }
+
+
     }
 
     function movePlayer(): void {
-        let playerX: number = people[j].position.x - 7;
-        let playerY: number = people[j].position.y - 7;
-        let playerXTwo: number = people[j].position.x + 7;
-        let playerYTwo: number = people[j].position.y + 7;
-        let distance: Vector = new Vector(positionBall.x - people[j].position.x, positionBall.y - people[j].position.y);
-        console.log(Math.sqrt(distance.x * distance.x + distance.y * distance.y));
-        if (Math.sqrt(distance.x * distance.x + distance.y * distance.y) <= 300 * scale) {
-            console.log("near");
-            crc2Players.clearRect(playerX, playerY, playerXTwo, playerYTwo);
-            people[j].move();
-            people[j].draw();
+        crc2Players.clearRect(0, 0, canvasPlayers.width, canvasPlayers.height);
+
+        for (let player of people) {
+            /* console.log(player.speed); */
+            player.checkPosition();
+            if (player.near == true) {
+                player.move();
+            }
+            player.draw();
+
+            player.checkCollision();
+            if (player.atBall == true) {
+                clearInterval(playerMovement);
+                clearInterval(ballMovement);
+                currentPlayer.innerHTML = "Player" + player.playerNumber;
+
+                playerMovement = setInterval(movePlayerBack, 20);
+            }
 
         }
+
+    }
+
+    function movePlayerBack(): void {
+        crc2Players.clearRect(0, 0, canvasPlayers.width, canvasPlayers.height);
+        for (let player of people) {
+            /* console.log(player.speed); */
+            if (player.atBall == false) {
+                console.log("false");
+                player.moveToStart();
+                player.draw();
+
+            }
+            else if (player.atBall == true) {
+                player.draw();
+
+            }
+            let currentPosition: Vector = new Vector(Math.floor(player.position.x), Math.floor(player.position.y));
+
+
+            if (player.startPosition.x - 10 <= currentPosition.x && currentPosition.x <= player.startPosition.x + 10 && player.startPosition.y - 10 <= currentPosition.y && currentPosition.y <= player.startPosition.y + 10) {
+                player.atStartposition = true;
+            }
+
+            let k: number = 0;
+            for (let player of people) {
+                if (player.atStartposition == true) {
+                    k += 1;
+                }
+            }
+            if (k == 21) {
+                clearInterval(playerMovement);
+                player.atBall = false;
+                player.near = false;
+
+            }
+        }
+
     }
 
 
@@ -202,6 +376,12 @@ namespace football {
         for (let i: number = 0; i < 11; i++) {
             playerPosition = new Vector(x[i] * scale, y[i] * scale);
             let player: Player = new Player(playerPosition, colors[0], i);
+            if (player.speed == undefined) {
+                player.speed = Math.floor(Math.random() * (maxSpeed - minSpeed + 1) + minSpeed) / 200;
+            }
+            if (player.precision == undefined) {
+                player.precision = Math.floor(Math.random() * (maxPrecision - minPrecision + 1) + minPrecision);
+            }
             player.draw();
             people.splice(i, 1, player);
 
@@ -214,6 +394,12 @@ namespace football {
         for (let i: number = 11; i < 22; i++) {
             playerPosition = new Vector(a[i - 11] * scale, b[i - 11] * scale);
             let player: Player = new Player(playerPosition, colors[1], i);
+            if (player.speed == undefined) {
+                player.speed = Math.floor(Math.random() * (maxSpeed - minSpeed + 1) + minSpeed) / 200;
+            }
+            if (player.precision == undefined) {
+                player.precision = Math.floor(Math.random() * (maxPrecision - minPrecision + 1) + minPrecision);
+            }
             player.draw();
             people.splice(i, 1, player);
 
@@ -221,6 +407,7 @@ namespace football {
 
         /* console.log(people); */
     }
+
 
     /* function showStats(): void {
         console.log(people[i]);
